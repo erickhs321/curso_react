@@ -1,25 +1,27 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux' //função responsável por conectar o mundo do react e o mundo do redux
+import { bindActionCreators } from 'redux' //ligar ações criadas com os dispatchers
+import { changeValue } from './fieldActions'
 
 class Field extends Component {
-
-  constructor(props) {
-    super(props)
-    this.state = { value: props.initialValue }
-    this.handleChange = this.handleChange.bind(this)
-  }
-
-  handleChange(event) {
-    this.setState({ value: event.target.value })
-  }
 
   render() {
     return (
       <div>
-        <label>{ this.state.value }</label><br />
-        <input onChange={this.handleChange} value={this.state.value} />
+        <label>{ this.props.value }</label><br />
+        <input onChange={this.props.changeValue} value={this.props.value} />
       </div>
     )
   }
 }
 
-export default Field
+function mapStateToProps(state){
+  return {
+    value: state.field.value
+  }
+} //mapear store pra propriedades dos componentes
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ changeValue }, dispatch)
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Field) //decorator(passando field e retornando o mesmo componente com propriedades)
